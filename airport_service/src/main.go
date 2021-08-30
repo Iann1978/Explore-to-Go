@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"database/sql"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func hello(w http.ResponseWriter, req *http.Request) {
@@ -35,8 +37,8 @@ func login(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(w, "Url Param 'username' is missing!!!")
 		return
 	}
-	username := usernames[0]
-	fmt.Fprintf(w, "username: %v\n", username)
+	req_username := usernames[0]
+	fmt.Fprintf(w, "username: %v\n", req_username)
 
 
 	passwords, ok := req.URL.Query()["password"]
@@ -44,14 +46,42 @@ func login(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(w, "Url Param 'password' is missing!!!")
 		return
 	}
-	password := passwords[0]
-	fmt.Fprintf(w, "password: %v\n", password)
+	req_password := passwords[0]
+	fmt.Fprintf(w, "password: %v\n", req_password)
+
+
+	db, err := sql.Open("sqlite3", "./foo.db")
+	checkErr(err)
+
+
+	rows, err := db.Query("select username, password from userinfo")
+	checkErr(err)
+
+	
+	for rows.Next() {
+		var username string
+		var password string
+
+		err = rows.Scan(&username, &password)
+		checkErr(err)
+		fmt.Fprintln(w, "username in db:" , username)
+		fmt.Fprintln(w, "password in db:", password)
+	}
 
 	fmt.Fprintf(w, "Succeed!")
 }
 
+func checkErr(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
 
 func main() {
+	fmt.Println("http://172.31.231.247:8099/hello")
+	fmt.Println("http://172.31.231.247:8099/login")
+	fmt.Println("http://172.31.231.247:8099/login?key=123&username=aaa&&password=bbb")
 	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/headers", headers)
 	http.HandleFunc("/login", login)
