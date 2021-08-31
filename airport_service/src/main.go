@@ -6,6 +6,8 @@ import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
 	"myfmt1"
+	"errors"
+	"net"
 )
 
 func hello(w http.ResponseWriter, req *http.Request) {
@@ -78,12 +80,47 @@ func checkErr(err error) {
 	}
 }
 
+func getClientIp() (string, error) {
+	addrs, err := net.InterfaceAddrs()
+
+	if err != nil {
+		return "", err
+	}
+
+	for _, address := range addrs {
+
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				return ipnet.IP.String(), err 
+			}
+		}
+	}
+
+	return "", errors.New("Can not find the client ip address!")
+}
 
 func main() {
+
+	addrs, err := net.InterfaceAddrs()
+	checkErr(err)
+
+	for _, address := range addrs {
+
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				fmt.Println(ipnet.IP.String())
+			}
+		}
+	}
+
+	ipstr, err := getClientIp()
+	checkErr(err)
+
+
 	myfmt1.Println()
-	fmt.Println("http://172.31.231.247:8099/hello")
-	fmt.Println("http://172.31.231.247:8099/login")
-	fmt.Println("http://172.31.231.247:8099/login?key=123&username=aaa&&password=bbb")
+	fmt.Println("http://", ipstr, ":8099/hello")
+	fmt.Println("http://", ipstr, ":8099/login")
+	fmt.Println("http://", ipstr, ":8099/login?key=123&username=aaa&&password=bbb")
 	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/headers", headers)
 	http.HandleFunc("/login", login)
