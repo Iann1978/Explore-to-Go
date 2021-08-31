@@ -8,7 +8,10 @@ import (
 	"myfmt1"
 	"errors"
 	"net"
+	"user"
 )
+
+var users user.UserDatabase
 
 func hello(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "hello\n")
@@ -43,6 +46,10 @@ func login(w http.ResponseWriter, req *http.Request) {
 	req_username := usernames[0]
 	fmt.Fprintf(w, "username: %v\n", req_username)
 
+	userid, err := users.HasUser(req_username)
+	checkErr(err)
+
+	fmt.Println("userid:", userid)
 
 	passwords, ok := req.URL.Query()["password"]
 	if !ok || len(passwords[0]) < 1 {
