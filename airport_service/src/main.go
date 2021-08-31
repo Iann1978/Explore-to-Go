@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
+	"myfmt1"
 )
 
 func hello(w http.ResponseWriter, req *http.Request) {
@@ -79,6 +80,7 @@ func checkErr(err error) {
 
 
 func main() {
+	myfmt1.Println()
 	fmt.Println("http://172.31.231.247:8099/hello")
 	fmt.Println("http://172.31.231.247:8099/login")
 	fmt.Println("http://172.31.231.247:8099/login?key=123&username=aaa&&password=bbb")
