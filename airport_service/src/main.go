@@ -123,6 +123,8 @@ func main() {
 	ipstr, err := getClientIp()
 	checkErr(err)
 
+	err = users.Open()
+	checkErr(err)
 
 	myfmt1.Println()
 	fmt.Println("http://", ipstr, ":8099/hello")
