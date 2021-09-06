@@ -14,10 +14,6 @@ import (
 
 var users user.UserDatabase
 
-func hello(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, "hello\n")
-}
-
 func checkErr(err error) {
 	if err != nil {
 		panic(err)
