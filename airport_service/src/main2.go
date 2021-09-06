@@ -4,7 +4,9 @@ import (
 	"airport_service/myfmt1"
 	"airport_service/user"
 	"database/sql"
+	"errors"
 	"fmt"
+	"net"
 	"net/http"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -22,7 +24,40 @@ func checkErr(err error) {
 	}
 }
 
+func getClientIp() (string, error) {
+	addrs, err := net.InterfaceAddrs()
+
+	if err != nil {
+		return "", err
+	}
+
+	for _, address := range addrs {
+
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				return ipnet.IP.String(), err
+			}
+		}
+	}
+
+	return "", errors.New("Can not find the client ip address!")
+}
+
+func showPromopt() {
+
+	ipstr, err := getClientIp()
+	checkErr(err)
+
+	fmt.Println("http://", ipstr, ":8099/hello")
+	fmt.Println("http://", ipstr, ":8099/login")
+	fmt.Println("http://", ipstr, ":8099/login?key=123&username=aaa&&password=bbb")
+
+}
+
 func main() {
+
+	showPromopt()
+
 	fmt.Println(users)
 	users.Open()
 	fmt.Println(users)
