@@ -2,6 +2,7 @@ package main
 
 import (
 	"airport_service/myfmt1"
+	"airport_service/user"
 	"database/sql"
 	"fmt"
 	"net/http"
@@ -9,15 +10,22 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+var users user.UserDatabase
+
 func hello(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "hello\n")
 }
+
 func checkErr(err error) {
 	if err != nil {
 		panic(err)
 	}
 }
+
 func main() {
+	fmt.Println(users)
+	users.Open()
+	fmt.Println(users)
 	fmt.Println("haha")
 	myfmt1.Println()
 	myprintf()
