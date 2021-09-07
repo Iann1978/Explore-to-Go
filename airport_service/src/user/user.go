@@ -8,10 +8,10 @@ import (
 )
 
 type User struct {
-	userid int32
-	name   string
-	x      float64
-	y      float64
+	userid   int32
+	Username string
+	x        float64
+	y        float64
 }
 
 type UserDatabase struct {
@@ -19,6 +19,7 @@ type UserDatabase struct {
 }
 
 type UserSet interface {
+	UserLongin(username string, password string) (*User, error)
 	HasUser(username string) (int32, error)
 }
 
@@ -37,4 +38,11 @@ func (users *UserDatabase) Open() error {
 
 func (users UserDatabase) HasUser(username string) (int32, error) {
 	return 0, nil
+}
+
+func (users *UserDatabase) UserLongin(username string, password string) (*User, error) {
+	user := &User{userid: 0, Username: username, x: 0, y: 0}
+
+	return user, nil
+
 }

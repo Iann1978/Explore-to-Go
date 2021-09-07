@@ -48,7 +48,14 @@ func login(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("hasPassword:", hasPassword)
 	fmt.Println("password:", password)
 
-	loginResp := &LoginResp{"Succeed", "aaa"}
+	user, err := users.UserLongin(username, password)
+	fmt.Println("user:", user)
+	fmt.Println("err:", err)
+
+	loginResp := &LoginResp{ErrorString: "Succeed.", Username: user.Username}
+	if err != nil {
+		loginResp.ErrorString = err.Error()
+	}
 
 	//fmt.Fprintln(w, loginResp)
 
