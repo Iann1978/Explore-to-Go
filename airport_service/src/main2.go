@@ -1,7 +1,6 @@
 package main
 
 import (
-	"airport_service/myfmt1"
 	"airport_service/user"
 	"errors"
 	"fmt"
@@ -51,12 +50,7 @@ func main() {
 
 	showPromopt()
 
-	fmt.Println(users)
 	users.Open()
-	fmt.Println(users)
-	fmt.Println("haha")
-	myfmt1.Println()
-	myprintf()
 
 	http.HandleFunc("/hello", hello)
 	//http.HandleFunc("/headers", headers)
