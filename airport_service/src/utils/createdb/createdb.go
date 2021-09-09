@@ -16,13 +16,15 @@ func checkErr(err error) {
 }
 
 func main() {
-	fmt.Println("aaa")
+	fmt.Println("create db")
 
 	removeDb := flag.Bool("removeDb", false, "Remove Database file if exists")
+	path := flag.String("path", "./", "The path of db file to operation.")
 
 	flag.Parse()
 
-	fmt.Println("removeDb:", *removeDb)
+	fmt.Println("removeDb: ", *removeDb)
+	fmt.Println("path: ", *path)
 
 	if *removeDb {
 		os.Remove("foo.db")
