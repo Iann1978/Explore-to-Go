@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -26,11 +27,15 @@ func main() {
 	fmt.Println("removeDb: ", *removeDb)
 	fmt.Println("path: ", *path)
 
+	filename := filepath.Join(*path, "foo.db")
+
+	fmt.Println("filename: ", filename)
+
 	if *removeDb {
-		os.Remove("foo.db")
+		os.Remove(filename)
 	}
 
-	db, err := sql.Open("sqlite3", "./foo.db")
+	db, err := sql.Open("sqlite3", filename)
 	checkErr(err)
 
 	stmt, err := db.Prepare("create table userinfo(username text, password text)")
@@ -43,7 +48,7 @@ func main() {
 	stmt, err = db.Prepare("insert into userinfo(username, password) values(?,?)")
 	checkErr(err)
 
-	res, err := stmt.Exec("astaxie", "Developer Department")
+	res, err := stmt.Exec("aaa", "bbb")
 	checkErr(err)
 
 	id, err := res.LastInsertId()
