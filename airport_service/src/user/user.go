@@ -40,9 +40,34 @@ func (users UserDatabase) HasUser(username string) (int32, error) {
 	return 0, nil
 }
 
+func checkErr(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
 func (users *UserDatabase) UserLongin(username string, password string) (*User, error) {
+
+	rows, err := users.db.Query("select username, password from userinfo where username=?", username)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
 	user := &User{userid: 0, Username: username, x: 0, y: 0}
 
-	return user, nil
+	for rows.Next() {
 
+		var username string
+		var password string
+		if err := rows.Scan(&username, &password); err != nil {
+			return nil, err
+		} else {
+			user.Username = username
+			return user, nil
+		}
+	}
+	return user, nil
 }
