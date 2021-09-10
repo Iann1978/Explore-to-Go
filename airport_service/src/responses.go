@@ -52,13 +52,19 @@ func login(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("user:", user)
 	fmt.Println("err:", err)
 
-	loginResp := &LoginResp{ErrorString: "Succeed.", Username: user.Username}
+	//loginResp := &LoginResp{ErrorString: "Succeed."}
 	if err != nil {
-		loginResp.ErrorString = err.Error()
+		fmt.Println("Error in login.")
+		loginResp := &LoginResp{ErrorString: err.Error()}
+		jsonLoginResp, _ := json.Marshal(loginResp)
+
+		fmt.Fprintln(w, string(jsonLoginResp))
+		//loginResp.ErrorString = err.Error()
+		return
 	}
 
 	//fmt.Fprintln(w, loginResp)
-
+	loginResp := &LoginResp{ErrorString: "Succeed", Username: user.Username}
 	jsonLoginResp, _ := json.Marshal(loginResp)
 
 	fmt.Fprintln(w, string(jsonLoginResp))
