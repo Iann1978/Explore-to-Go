@@ -40,9 +40,9 @@ func showPromopt() {
 	ipstr, err := getClientIp()
 	checkErr(err)
 
-	fmt.Println("http://", ipstr, ":8099/hello")
-	fmt.Println("http://", ipstr, ":8099/login")
-	fmt.Println("http://", ipstr, ":8099/login?key=123&username=aaa&&password=bbb")
+	fmt.Printf("http://%s:8099/hello\n", ipstr)
+	fmt.Printf("http://%s:8099/login\n", ipstr)
+	fmt.Printf("http://%s:8099/login?key=123&username=aaa&&password=bbb\n", ipstr)
 
 }
 
