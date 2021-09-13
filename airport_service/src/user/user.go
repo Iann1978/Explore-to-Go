@@ -16,7 +16,9 @@ type User struct {
 }
 
 type UserDatabase struct {
-	db *sql.DB
+	db          *sql.DB
+	onlineUsers map[int]*User
+	counter     int32
 }
 
 type UserSet interface {
@@ -30,6 +32,8 @@ func (users *UserDatabase) Open() error {
 	if db != nil {
 		fmt.Println("db != nil")
 		users.db = db
+		users.onlineUsers = make(map[int]*User)
+		users.counter = 0
 	}
 	if err != nil {
 		fmt.Println(err)
@@ -69,6 +73,8 @@ func (users *UserDatabase) UserLongin(username string, userPassword string) (*Us
 			user.Username = username
 
 			if userPassword == password {
+				users.counter++
+				user.userid = users.counter
 				return user, nil
 			} else {
 				return nil, errors.New("Password error!!!")

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"airport_service/user"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -30,6 +31,7 @@ func getParam(req *http.Request, key string) (string, bool) {
 type LoginResp struct {
 	ErrorString string
 	Username    string
+	user        *user.User
 }
 
 func login(w http.ResponseWriter, req *http.Request) {
@@ -56,6 +58,7 @@ func login(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		fmt.Println("Error in login.")
 		loginResp := &LoginResp{ErrorString: err.Error()}
+
 		jsonLoginResp, _ := json.Marshal(loginResp)
 
 		fmt.Fprintln(w, string(jsonLoginResp))
@@ -65,6 +68,7 @@ func login(w http.ResponseWriter, req *http.Request) {
 
 	//fmt.Fprintln(w, loginResp)
 	loginResp := &LoginResp{ErrorString: "Succeed", Username: user.Username}
+	loginResp.user = user
 	jsonLoginResp, _ := json.Marshal(loginResp)
 
 	fmt.Fprintln(w, string(jsonLoginResp))
