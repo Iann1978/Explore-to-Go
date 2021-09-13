@@ -2,8 +2,15 @@ package test
 
 import (
 	"testing"
+	"net/http"
 )
 
-func TestBase(t *testing.T) {
-	t.Errorf("Error in testing.")
+
+func TestConnection(t *testing.T) {
+	resp, err := http.Get("http://gobyexample.com")
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+	defer resp.Body.Close()
+
 }
