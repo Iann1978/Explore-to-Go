@@ -41,6 +41,7 @@ func showPromopt() {
 	checkErr(err)
 
 	fmt.Printf("http://%s:8099/hello\n", ipstr)
+	fmt.Printf("http://%s:8099/rebuilddb\n", ipstr)
 	fmt.Printf("http://%s:8099/login\n", ipstr)
 	fmt.Printf("http://%s:8099/login?key=123&username=aaa&&password=bbb\n", ipstr)
 
@@ -53,6 +54,7 @@ func main() {
 	users.Open()
 
 	http.HandleFunc("/hello", hello)
+	http.HandleFunc("/rebuilddb", rebuilddb)
 	//http.HandleFunc("/headers", headers)
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/regist", regist)
