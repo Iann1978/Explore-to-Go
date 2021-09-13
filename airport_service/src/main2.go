@@ -55,6 +55,7 @@ func main() {
 	http.HandleFunc("/hello", hello)
 	//http.HandleFunc("/headers", headers)
 	http.HandleFunc("/login", login)
+	http.HandleFunc("/regist", regist)
 
 	http.ListenAndServe(":8099", nil)
 }

@@ -22,6 +22,7 @@ type UserDatabase struct {
 }
 
 type UserSet interface {
+	Regist(username string, password string) (*User, error)
 	UserLongin(username string, password string) (*User, error)
 	HasUser(username string) (int32, error)
 }
@@ -84,4 +85,31 @@ func (users *UserDatabase) UserLongin(username string, userPassword string) (*Us
 	}
 
 	return user, nil
+}
+
+func (users *UserDatabase) Regist(username string, password string) (*User, error) {
+
+	rows, err := users.db.Query("select username, password from userinfo where username=?", username)
+	defer rows.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	//user := &User{userid: 0, Username: username, x: 0, y: 0}
+	for rows.Next() {
+		return nil, errors.New("User has already exists.")
+	}
+
+	stmt, err := users.db.Prepare("insert into userinfo(username, password) values(?,?)")
+	defer stmt.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = stmt.Exec(username, password)
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, nil
 }
