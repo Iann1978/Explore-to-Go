@@ -42,6 +42,14 @@ func (users *UserDatabase) Open() error {
 	return err
 }
 
+func (users *UserDatabase) Close() error {
+	fmt.Println("UserDatabase.Close()")
+	users.db.Close()
+	users.onlineUsers = nil
+	users.counter = 0
+	return nil
+}
+
 func (users UserDatabase) HasUser(username string) (int32, error) {
 	return 0, nil
 }

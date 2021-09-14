@@ -9,7 +9,10 @@ import (
 func rebuilddb(w http.ResponseWriter, req *http.Request) {
 
 	fmt.Fprintln(w, "hehe")
+	users.Close()
 	mydb.RemoveDb()
 
 	mydb.CreateDb()
+	users.Open()
+
 }
