@@ -1,7 +1,6 @@
 package main
 
 import (
-	"airport_service/user"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -25,24 +24,22 @@ func getParam(req *http.Request, key string) (string, bool) {
 	}
 
 	return values[0], true
-
 }
 
 type LoginResp struct {
+	ErrorCode   ErrorCode
 	ErrorString string
-	Username    string
-	user        *user.User
+	Session     string
 }
 
 func login(w http.ResponseWriter, req *http.Request) {
 
 	fmt.Println("Response for login.")
+	defer fmt.Println("\n")
+	// define variable for responsing
+	resp := LoginResp{ErrorCode: NoError, ErrorString: NoError.String()}
 
-	key, hasKey := getParam(req, "key")
-
-	fmt.Println("hasKey:", hasKey)
-	fmt.Println("key:", key)
-
+	// get parameters
 	username, hasUsername := getParam(req, "username")
 	password, hasPassword := getParam(req, "password")
 	fmt.Println("hasUsername:", hasUsername)
@@ -50,33 +47,31 @@ func login(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("hasPassword:", hasPassword)
 	fmt.Println("password:", password)
 
+	if !hasUsername || !hasPassword {
+		resp.ErrorCode = ParameterError
+		resp.ErrorString = ParameterError.String()
+		jsonResp, _ := json.Marshal(resp)
+		fmt.Fprintf(w, string(jsonResp))
+		return
+	}
+
+	// execute login
 	user, err := users.UserLongin(username, password)
 	fmt.Println("user:", user)
 	fmt.Println("err:", err)
 
-	//loginResp := &LoginResp{ErrorString: "Succeed."}
 	if err != nil {
-		fmt.Println("Error in login.")
-		loginResp := &LoginResp{ErrorString: err.Error()}
-
-		jsonLoginResp, _ := json.Marshal(loginResp)
-
-		fmt.Fprintln(w, string(jsonLoginResp))
-		//loginResp.ErrorString = err.Error()
+		resp.ErrorCode = UnknownError
+		resp.ErrorString = UnknownError.String()
+		jsonResp, _ := json.Marshal(resp)
+		fmt.Fprintf(w, string(jsonResp))
 		return
 	}
 
-	//fmt.Fprintln(w, loginResp)
-	loginResp := &LoginResp{ErrorString: "Succeed", Username: user.Username}
-	loginResp.user = user
-	jsonLoginResp, _ := json.Marshal(loginResp)
-
-	fmt.Fprintln(w, string(jsonLoginResp))
-
-	if hasUsername && hasPassword {
-		fmt.Fprintf(w, "Succeed!\n")
-	} else {
-		fmt.Fprintf(w, "Failed!\n")
-	}
+	// return succeed
+	resp.ErrorCode = NoError
+	resp.ErrorString = NoError.String()
+	jsonResp, _ := json.Marshal(resp)
+	fmt.Fprintf(w, string(jsonResp))
 
 }
