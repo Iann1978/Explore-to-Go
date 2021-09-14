@@ -43,3 +43,19 @@ func TestConnection(t *testing.T) {
 	defer resp.Body.Close()
 
 }
+
+func TestRebuildDb(t *testing.T) {
+	ipstr, err := getClientIp()
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	req := fmt.Sprintf("http://%s:8099/rebuilddb", ipstr)
+	fmt.Println(req)
+
+	resp, err := http.Get(req)
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+	defer resp.Body.Close()
+}
