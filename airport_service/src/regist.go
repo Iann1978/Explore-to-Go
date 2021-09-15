@@ -1,39 +1,14 @@
 package main
 
 import (
+	"airport_service/data"
 	"encoding/json"
 	"fmt"
 	"net/http"
 )
 
-type ErrorCode int32
-
-const (
-	NoError        ErrorCode = 0
-	UnknownError   ErrorCode = 1
-	ParameterError ErrorCode = 2
-	UserExist                = 3
-	UserNotExist             = 4
-)
-
-func (e ErrorCode) String() string {
-	switch e {
-	case NoError:
-		return "No Error"
-	case UnknownError:
-		return "Unknown Error"
-	case ParameterError:
-		return "Parameter Error"
-	case UserExist:
-		return "User Already Exist"
-	case UserNotExist:
-		return "User Not Exist"
-	}
-	return "unknown"
-}
-
 type RegistResp struct {
-	ErrorCode   ErrorCode
+	ErrorCode   data.ErrorCode
 	ErrorString string
 }
 type LoginResp1 struct {
@@ -45,7 +20,7 @@ type LoginResp1 struct {
 func regist(w http.ResponseWriter, req *http.Request) {
 
 	// define variable for responsing
-	resp := RegistResp{ErrorCode: NoError, ErrorString: NoError.String()}
+	resp := RegistResp{ErrorCode: data.NoError, ErrorString: data.NoError.String()}
 
 	// get parameters
 	username, hasUsername := getParam(req, "username")
@@ -56,8 +31,8 @@ func regist(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("password:", password)
 
 	if !hasPassword || !hasPassword {
-		resp.ErrorCode = ParameterError
-		resp.ErrorString = ParameterError.String()
+		resp.ErrorCode = data.ParameterError
+		resp.ErrorString = data.ParameterError.String()
 		jsonResp, _ := json.Marshal(resp)
 		fmt.Fprintf(w, string(jsonResp))
 		return
@@ -68,8 +43,8 @@ func regist(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("user:", user)
 	fmt.Println("err:", err)
 	if err != nil {
-		resp.ErrorCode = UnknownError
-		resp.ErrorString = UnknownError.String()
+		resp.ErrorCode = data.UnknownError
+		resp.ErrorString = data.UnknownError.String()
 		jsonResp, _ := json.Marshal(resp)
 		fmt.Fprintf(w, string(jsonResp))
 		//fmt.Fprintf(w, err.Error())
@@ -78,8 +53,8 @@ func regist(w http.ResponseWriter, req *http.Request) {
 	}
 
 	// return succeed
-	resp.ErrorCode = NoError
-	resp.ErrorString = NoError.String()
+	resp.ErrorCode = data.NoError
+	resp.ErrorString = data.NoError.String()
 	jsonResp, _ := json.Marshal(resp)
 	fmt.Fprintf(w, string(jsonResp))
 }

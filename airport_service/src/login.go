@@ -1,13 +1,14 @@
 package main
 
 import (
+	"airport_service/data"
 	"encoding/json"
 	"fmt"
 	"net/http"
 )
 
 type LoginResp struct {
-	ErrorCode   ErrorCode
+	ErrorCode   data.ErrorCode
 	ErrorString string
 	Session     string
 }
@@ -17,7 +18,7 @@ func login(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("Response for login.")
 	defer fmt.Println("\n")
 	// define variable for responsing
-	resp := LoginResp{ErrorCode: NoError, ErrorString: NoError.String()}
+	resp := LoginResp{ErrorCode: data.NoError, ErrorString: data.NoError.String()}
 
 	// get parameters
 	username, hasUsername := getParam(req, "username")
@@ -28,8 +29,8 @@ func login(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("password:", password)
 
 	if !hasUsername || !hasPassword {
-		resp.ErrorCode = ParameterError
-		resp.ErrorString = ParameterError.String()
+		resp.ErrorCode = data.ParameterError
+		resp.ErrorString = data.ParameterError.String()
 		jsonResp, _ := json.Marshal(resp)
 		fmt.Fprintf(w, string(jsonResp))
 		return
@@ -41,16 +42,16 @@ func login(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("err:", err)
 
 	if err != nil {
-		resp.ErrorCode = UnknownError
-		resp.ErrorString = UnknownError.String()
+		resp.ErrorCode = data.UnknownError
+		resp.ErrorString = data.UnknownError.String()
 		jsonResp, _ := json.Marshal(resp)
 		fmt.Fprintf(w, string(jsonResp))
 		return
 	}
 
 	// return succeed
-	resp.ErrorCode = NoError
-	resp.ErrorString = NoError.String()
+	resp.ErrorCode = data.NoError
+	resp.ErrorString = data.NoError.String()
 	jsonResp, _ := json.Marshal(resp)
 	fmt.Fprintf(w, string(jsonResp))
 
