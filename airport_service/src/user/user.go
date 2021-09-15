@@ -123,12 +123,27 @@ func (users *UserDatabase) UserLongin(username string, userPassword string) (*Us
 			if userPassword == password {
 				users.counter++
 				user.userid = users.counter
+
+				break
+
 				return user, nil
 			} else {
 				return nil, errors.New("Password error!!!")
 			}
 
 		}
+	}
+
+	rows.Close()
+	stmt, err := users.db.Prepare("update userinfo set session=? where username=?")
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(session, username)
+	if err != nil {
+		return nil, err
 	}
 
 	return user, nil
