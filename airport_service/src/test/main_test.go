@@ -1,6 +1,7 @@
 package test
 
 import (
+	"airport_service/data"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -94,6 +95,10 @@ type RegistResp struct {
 }
 
 func TestRegist(t *testing.T) {
+
+	aaa := &data.LoginResp2{"aaabbb"}
+	fmt.Println(aaa)
+
 	ipstr, err := getClientIp()
 	if err != nil {
 		t.Errorf(err.Error())

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"airport_service/data"
 	"airport_service/user"
 	"errors"
 	"fmt"
@@ -48,7 +49,8 @@ func showPromopt() {
 }
 
 func main() {
-
+	aaa := &data.LoginResp2{"aaabbb"}
+	fmt.Println(aaa)
 	showPromopt()
 
 	users.Open()
@@ -60,4 +62,5 @@ func main() {
 	http.HandleFunc("/regist", regist)
 
 	http.ListenAndServe(":8099", nil)
+
 }
