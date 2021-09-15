@@ -1,6 +1,7 @@
 package user
 
 import (
+	"airport_service/data"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -19,6 +20,15 @@ type UserDatabase struct {
 	db          *sql.DB
 	onlineUsers map[int]*User
 	counter     int32
+}
+
+type UserSetError struct {
+	ErrorCode   data.ErrorCode
+	ErrorString string
+}
+
+func (e *UserSetError) Error() string {
+	return e.ErrorString
 }
 
 type UserSet interface {
@@ -105,7 +115,9 @@ func (users *UserDatabase) Regist(username string, password string) (*User, erro
 
 	//user := &User{userid: 0, Username: username, x: 0, y: 0}
 	for rows.Next() {
-		return nil, errors.New("User has already exists.")
+		e := UserSetError{ErrorCode: data.UserExist, ErrorString: data.UserExist.String()}
+		return nil, &e
+		//return nil, errors.New("User has already exists.")
 	}
 
 	stmt, err := users.db.Prepare("insert into userinfo(username, password) values(?,?)")

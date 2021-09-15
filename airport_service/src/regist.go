@@ -2,6 +2,7 @@ package main
 
 import (
 	"airport_service/data"
+	"airport_service/user"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -39,12 +40,19 @@ func regist(w http.ResponseWriter, req *http.Request) {
 	}
 
 	// execute regist operation
-	user, err := users.Regist(username, password)
-	fmt.Println("user:", user)
+	auser, err := users.Regist(username, password)
+	fmt.Println("user:", auser)
 	fmt.Println("err:", err)
 	if err != nil {
-		resp.ErrorCode = data.UnknownError
-		resp.ErrorString = data.UnknownError.String()
+		aa := &user.UserSetError{data.NoError, ""}
+		fmt.Println(aa)
+		if userSetError, ok := err.(*user.UserSetError); ok {
+			resp.ErrorCode = userSetError.ErrorCode
+			resp.ErrorString = userSetError.ErrorString
+		} else {
+			resp.ErrorCode = data.UnknownError
+			resp.ErrorString = data.UnknownError.String()
+		}
 		jsonResp, _ := json.Marshal(resp)
 		fmt.Fprintf(w, string(jsonResp))
 		//fmt.Fprintf(w, err.Error())

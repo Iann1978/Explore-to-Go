@@ -12,8 +12,8 @@ const (
 	NoError        ErrorCode = 0
 	UnknownError   ErrorCode = 1
 	ParameterError ErrorCode = 2
-	UserExist                = 3
-	UserNotExist             = 4
+	UserExist      ErrorCode = 3
+	UserNotExist   ErrorCode = 4
 )
 
 func (e ErrorCode) String() string {
