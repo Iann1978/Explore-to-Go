@@ -52,6 +52,7 @@ func login(w http.ResponseWriter, req *http.Request) {
 	// return succeed
 	resp.ErrorCode = data.NoError
 	resp.ErrorString = data.NoError.String()
+	resp.Session = user.Session
 	jsonResp, _ := json.Marshal(resp)
 	fmt.Fprintf(w, string(jsonResp))
 

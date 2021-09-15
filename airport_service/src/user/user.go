@@ -2,7 +2,9 @@ package user
 
 import (
 	"airport_service/data"
+	"crypto/rand"
 	"database/sql"
+	"encoding/base64"
 	"errors"
 	"fmt"
 
@@ -12,6 +14,7 @@ import (
 type User struct {
 	userid   int32
 	Username string
+	Session  string
 	x        float64
 	y        float64
 }
@@ -70,6 +73,30 @@ func checkErr(err error) {
 	}
 }
 
+// GenerateRandomBytes returns securely generated random bytes.
+// It will return an error if the system's secure random
+// number generator fails to function correctly, in which
+// case the caller should not continue.
+func GenerateRandomBytes(n int) ([]byte, error) {
+	b := make([]byte, n)
+	_, err := rand.Read(b)
+	// Note that err == nil only if we read len(b) bytes.
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}
+
+// GenerateRandomString returns a URL-safe, base64 encoded
+// securely generated random string.
+// It will return an error if the system's secure random
+// number generator fails to function correctly, in which
+// case the caller should not continue.
+func GenerateRandomString(s int) (string, error) {
+	b, err := GenerateRandomBytes(s)
+	return base64.URLEncoding.EncodeToString(b), err
+}
 func (users *UserDatabase) UserLongin(username string, userPassword string) (*User, error) {
 
 	rows, err := users.db.Query("select username, password from userinfo where username=?", username)
@@ -80,7 +107,9 @@ func (users *UserDatabase) UserLongin(username string, userPassword string) (*Us
 
 	defer rows.Close()
 
-	user := &User{userid: 0, Username: username, x: 0, y: 0}
+	session, _ := GenerateRandomString(32)
+
+	user := &User{userid: 0, Username: username, x: 0, y: 0, Session: session}
 
 	for rows.Next() {
 
