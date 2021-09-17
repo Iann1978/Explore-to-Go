@@ -14,6 +14,7 @@ const (
 	ParameterError ErrorCode = 2
 	UserExist      ErrorCode = 3
 	UserNotExist   ErrorCode = 4
+	UserOffline    ErrorCode = 5
 )
 
 func (e ErrorCode) String() string {
@@ -28,6 +29,8 @@ func (e ErrorCode) String() string {
 		return "User Already Exist"
 	case UserNotExist:
 		return "User Not Exist"
+	case UserOffline:
+		return "User Offline"
 	}
 	return "unknown"
 }

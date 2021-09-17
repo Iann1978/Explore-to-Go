@@ -182,12 +182,18 @@ func (users *UserDatabase) Regist(username string, password string) (*User, erro
 func (users *UserDatabase) UserLogout(reqUsername string) error {
 
 	var username string
-	var session string
+	var session *string
 	row := users.db.QueryRow("select username, session from userinfo where username=?", reqUsername)
 
 	err := row.Scan(&username, &session)
 	if err != nil {
+		fmt.Println(err)
 		e := UserSetError{ErrorCode: data.UnknownError, ErrorString: data.UnknownError.String()}
+		return &e
+	}
+
+	if session == nil || len(*session) == 0 {
+		e := UserSetError{ErrorCode: data.UserOffline, ErrorString: data.UserOffline.String()}
 		return &e
 	}
 
