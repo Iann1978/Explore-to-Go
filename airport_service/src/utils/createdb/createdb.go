@@ -38,7 +38,8 @@ func main() {
 	db, err := sql.Open("sqlite3", filename)
 	checkErr(err)
 
-	stmt, err := db.Prepare("create table userinfo(username text, password text, session text)")
+	stmt, err := db.Prepare("create table userinfo(username text, password text, session text,
+		longitude real, latitude real)")
 	checkErr(err)
 
 	_, err = stmt.Exec()

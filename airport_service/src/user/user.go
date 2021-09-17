@@ -243,5 +243,16 @@ func (users *UserDatabase) UploadPos(reqSession string, reqLongitude float64, re
 		return err
 	}
 
+	stmt, err := users.db.Prepare("update userinfo set longitude=?, latitude=? where session=?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(reqLongitude, reqLatitude, reqSession)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
