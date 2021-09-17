@@ -46,6 +46,7 @@ func showPromopt() {
 	fmt.Printf("http://%s:8099/regist?username=aaa&&password=bbb\n", ipstr)
 	fmt.Printf("http://%s:8099/login?username=aaa&&password=bbb\n", ipstr)
 	fmt.Printf("http://%s:8099/logout?username=aaa&&session=bbb\n", ipstr)
+	fmt.Printf("http://%s:8099/uploadpos?session=aaa&&longitude=0.0&&latitude=0.0\n", ipstr)
 
 }
 
@@ -62,6 +63,7 @@ func main() {
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/regist", regist)
+	http.HandleFunc("/uploadpos", uploadpos)
 
 	http.ListenAndServe(":8099", nil)
 

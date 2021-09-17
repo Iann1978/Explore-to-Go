@@ -39,6 +39,7 @@ type UserSet interface {
 	UserLongin(username string, password string) (*User, error)
 	UserLogout(username string) error
 	HasUser(username string) (int32, error)
+	UploadPos(reqSession string, longitude float64, latitude float64) error
 }
 
 func (users *UserDatabase) Open() error {
@@ -223,4 +224,24 @@ func (users *UserDatabase) UserLogout(reqUsername string) error {
 	// 	return &e
 	// }
 
+}
+
+func (users *UserDatabase) UploadPos(reqSession string, reqLongitude float64, reqLatitude float64) error {
+
+	row := users.db.QueryRow("select username, session from userinfo where session=?", reqSession)
+
+	var username string
+	var session string
+	err := row.Scan(&username, &session)
+	if err != nil {
+		switch err {
+		case sql.ErrNoRows:
+			fmt.Println(err)
+			e := UserSetError{ErrorCode: data.SessionError, ErrorString: data.SessionError.String()}
+			return &e
+		}
+		return err
+	}
+
+	return nil
 }

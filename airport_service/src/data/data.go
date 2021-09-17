@@ -15,6 +15,7 @@ const (
 	UserExist      ErrorCode = 3
 	UserNotExist   ErrorCode = 4
 	UserOffline    ErrorCode = 5
+	SessionError   ErrorCode = 6
 )
 
 func (e ErrorCode) String() string {
@@ -31,6 +32,8 @@ func (e ErrorCode) String() string {
 		return "User Not Exist"
 	case UserOffline:
 		return "User Offline"
+	case SessionError:
+		return "Session Error"
 	}
 	return "unknown"
 }
