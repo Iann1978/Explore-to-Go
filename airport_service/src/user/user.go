@@ -37,6 +37,7 @@ func (e *UserSetError) Error() string {
 type UserSet interface {
 	Regist(username string, password string) (*User, error)
 	UserLongin(username string, password string) (*User, error)
+	UserLogout(username string) error
 	HasUser(username string) (int32, error)
 }
 
@@ -176,4 +177,44 @@ func (users *UserDatabase) Regist(username string, password string) (*User, erro
 	}
 
 	return nil, nil
+}
+
+func (users *UserDatabase) UserLogout(reqUsername string) error {
+
+	var username string
+	var session string
+	row := users.db.QueryRow("select username, session from userinfo where username=?", reqUsername)
+
+	err := row.Scan(&username, &session)
+	if err != nil {
+		e := UserSetError{ErrorCode: data.UnknownError, ErrorString: data.UnknownError.String()}
+		return &e
+	}
+
+	stmt, err := users.db.Prepare("update userinfo set session=null where username=?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(username)
+	if err != nil {
+		return err
+	}
+
+	return nil
+	//  err {
+	// case sql.ErrNoRows:
+	//   fmt.Println("No rows were returned!")
+	// case nil:
+	//   fmt.Println(id, email)
+	// default:
+	//   panic(err)
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	e := UserSetError{ErrorCode: data.UnknownError, ErrorString: data.UnknownError.String()}
+	// 	return &e
+	// }
+
 }
