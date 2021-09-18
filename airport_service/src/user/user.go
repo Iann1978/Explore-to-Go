@@ -12,11 +12,13 @@ import (
 )
 
 type User struct {
-	userid   int32
-	Username string
-	Session  string
-	x        float64
-	y        float64
+	userid    int32
+	Username  string
+	Session   string
+	Longitude float64
+	Latitude  float64
+	x         float64
+	y         float64
 }
 
 type UserDatabase struct {
@@ -40,6 +42,7 @@ type UserSet interface {
 	UserLogout(username string) error
 	HasUser(username string) (int32, error)
 	UploadPos(reqSession string, longitude float64, latitude float64) error
+	AllUsers(reqSession string) error
 }
 
 func (users *UserDatabase) Open() error {
@@ -255,4 +258,24 @@ func (users *UserDatabase) UploadPos(reqSession string, reqLongitude float64, re
 	}
 
 	return nil
+}
+
+func (users *UserDatabase) AllUsers(reqSession string) ([]User, error) {
+
+	rows, err := users.db.Query("select username, longitude, latitude from userinfo")
+	checkErr(err)
+
+	var onlineusers []User
+
+	for rows.Next() {
+		usr := User{}
+		//var username string
+		err = rows.Scan(&usr.Username, &usr.Longitude, &usr.Latitude)
+		//fmt.Println(username)
+		fmt.Println(usr.Username)
+
+		onlineusers = append(onlineusers, usr)
+	}
+
+	return onlineusers, nil
 }
