@@ -31,11 +31,16 @@ func login(w http.ResponseWriter, r *http.Request) {
 	} else {
 		err := r.ParseForm()
 		if err != nil {
+			fmt.Println("Error, Error, Error, Error!!!!!!!");
 			log.Fatal("ParseForm: ", err)
+			fmt.Fprintln(w,"False")
+		} else {
+
+			fmt.Println("username:", r.Form["username"])
+			fmt.Println("password:", r.Form["password"])
+			fmt.Fprintln(w, "Succeed")
 		}
 
-		fmt.Println("username:", r.Form["username"])
-		fmt.Println("password:", r.Form["password"])
 	}
 }
 
