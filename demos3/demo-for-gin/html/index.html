@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <script src="jquery-3.6.0.min.js"></script>
+    <title>Single file upload</title>
+</head>
+<body>
+<h1 style="display: none;">Upload single file with fields</h1>
+
+<button id="show_h1">Show H1</button>
+
+<form id="testform" onsubmit="onsubmit111();"  enctype="application/x-www-form-urlencoded">
+    Username: <input type="text" name="username"><br>
+    Passwork: <input type="text" name="password"><br>
+    Time: <input type="datetime" name="time"><br>
+    <input type="submit" value="Submit">
+</form>
+
+<div id="profiler_status">hehe</div>
+
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Item</th>
+        <th>Price</th>
+    </tr>
+    <tr>
+        <td>SecurityDoor</td>
+        <td>Panpan</td>
+        <td>4500</td>
+    </tr>
+    <tr>
+        <td  rowspan="2">DrawingRoom</td>
+        <td>Lights</td>
+        <td>600</td>
+    </tr>
+    <tr>
+        
+        <td>Floor</td>
+        <td>700</td>
+    </tr>
+
+</table>
+<table id=mytable  border="1">hehe</table>
+<script src="testform.js"></script>
+
+
+</body>
