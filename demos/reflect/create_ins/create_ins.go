@@ -37,7 +37,7 @@ func main() {
 	fmt.Println(newBird.Type().Kind())
 	newBird.Elem().FieldByName("Bird").Set(reflect.ValueOf(bird))
 	newBird.Elem().FieldByName("Name").Set(reflect.ValueOf("daogi"))
-	newBird.Elem().MethodByName("Fly").Call(nil)
+	newBird.Elem().MethodByName("Fly")
 
 	// fmt.Println(tp)
 
